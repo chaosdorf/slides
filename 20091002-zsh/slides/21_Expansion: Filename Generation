@@ -1,0 +1,6 @@
+feh **/*.((#i)jp(e|)g|png)(L+0)
+    ↑↑↑
+
+Rekursives Globbing: Aktuelles + alle Unterverzeichnisse
+
+(Inzwischen auch in bash)

@@ -1,0 +1,7 @@
+ * /u/s/d/zsh → /usr/share/doc/zsh
+
+ * zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z} m:_=\\\ ' '+ l:|=* r:|=*'
+
+ * /tmp/auth → /tmp/serverauth…
+
+ * foo_bar → Foo Bar

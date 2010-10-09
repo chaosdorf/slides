@@ -1,0 +1,6 @@
+(Globbing)
+
+feh **/*.((#i)jp(e|)g|png)(L+0)
+
+Alle Bilder (nach Dateityp), keine leeren Dateien,
+case insensitive

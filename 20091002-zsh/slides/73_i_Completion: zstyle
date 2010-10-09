@@ -1,0 +1,3 @@
+ * ssh/scp: Hosts + Remote Dateien
+
+ * zstyle ':completion:*' hosts ${(k)hosts}

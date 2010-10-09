@@ -1,0 +1,4 @@
+for i (**/.git(:h)) ( cd $i; git pull )
+       ↑↑↑↑↑↑↑
+
+Filename Generation wie vorhin auch

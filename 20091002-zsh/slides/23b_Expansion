@@ -1,0 +1,4 @@
+for i (**/.git(:h)) ( cd $i; git pull )
+↑↑↑↑↑↑              ↑                 ↑
+
+for-Schleife mit Subshell (wegen cd)

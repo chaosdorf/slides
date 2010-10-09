@@ -1,0 +1,1 @@
+setopt AUTO_PUSHD

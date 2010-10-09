@@ -1,0 +1,5 @@
+ * alias foo='bar'
+
+ * alias agi='sudo apt-get install'
+
+ * alias ls='ls -h --color=auto'

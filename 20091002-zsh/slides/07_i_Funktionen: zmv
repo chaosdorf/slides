@@ -1,0 +1,7 @@
+Verschieben/Umbenennen mehrerer Dateien
+
+zmv -W '*.txt' '*'
+
+Ohne -W: zmv '(*).txt' '$1'
+
+Siehe auch zshcontrib(1)

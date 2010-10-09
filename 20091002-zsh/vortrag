@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+
+for i in slides/<0-99>*; {
+	clear
+	number=${${i%%_*}:t}
+	name=${${i:t}##*_}
+	printf "%2s %$((COLUMNS- $#number - 1))s\n\n" $number $name
+	cat $i | sed 's/^/\t/'
+	echo "\n"
+	if [[ $i == *_i_* ]] {
+		(cd; zsh)
+	} else {
+		read
+	}
+}
+
+echo "\t--done--"
+read

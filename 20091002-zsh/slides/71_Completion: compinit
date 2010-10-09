@@ -1,0 +1,5 @@
+ * compinit -C (siehe auch zshcompsys(1))
+
+ * compdef (bash-like)
+
+ * Completion-Funktionen: _feh etc.

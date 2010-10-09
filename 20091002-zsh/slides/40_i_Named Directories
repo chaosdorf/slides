@@ -1,0 +1,3 @@
+ * hash -d ksrc=/usr/src/linux-source-$(uname -r)
+
+ * cd ~ksrc

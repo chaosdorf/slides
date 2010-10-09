@@ -1,0 +1,9 @@
+Wie in jeder Shell:
+
+foo() { ... }
+
+oder:
+
+Datei in $fpath + autoload
+
+Z.B. mkcd, zmv, …

@@ -1,0 +1,3 @@
+   mv foo{.txt,}
+
+ → mv foo.txt foo

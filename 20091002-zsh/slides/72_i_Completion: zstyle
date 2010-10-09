@@ -1,0 +1,4 @@
+ * kill: zstyle zu lang ;-)
+
+ * Dateien ignorieren, z.B. vim:
+   zstyle ':completion:*:*:vi(m|):*' ignored-patterns 'a.out|*.o'

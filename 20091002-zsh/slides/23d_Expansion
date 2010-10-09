@@ -1,0 +1,6 @@
+for i (**/.git(:h)) ( cd $i; git pull )
+              ↑↑↑↑
+
+=> i=${i:h}
+
+=> i=`dirname $i`
