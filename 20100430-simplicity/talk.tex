@@ -1,0 +1,218 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usetheme{Warsaw}
+\title[Keep It Simple and Stupid]
+	{Keep It Simple and Stupid\\Das KISS-Prinzip in der Praxis}
+\author{Daniel Friesel \and Maximilian Gaß}
+\institute{Chaosdorf}
+\date{30. April 2010}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\lstset{numbers=left}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Was ist KISS?}
+	\begin{itemize}
+		\item KISS -- Keep It Simple and Stupid
+		\item (auch: Keep It Simple, Stupid)
+		\pause \item Es geht nicht primär um Bloat oder Performancevorteile
+	\end{itemize}
+	\pause
+	\begin{quote}
+		Quick C ist nicht Quick, SMTP ist nicht Simple, LDAP ist nicht
+		Lightweight, SQL ist nicht Structured, Windows 2000 Professional
+		ist
+		nicht Professional.  Seht ihr?  Ist doch ganz einfach.
+	\end{quote}
+	\begin{flushright}
+		-- Felix von Leitner, de.comp.security.misc
+	\end{flushright}
+\end{frame}
+% z.B. goblin (plan9-userland) - "If in doubt, use brute force" (Naiver
+% Algorithmus ist einfacher zu lesen)
+
+\section{Initskripte}
+
+\begin{frame}{Initskripte}
+	Was sind Initskripte?\\
+
+	\begin{itemize}
+		\pause \item Starten/Stoppen Services (Daemons)
+		\pause \item Integraler Bestandteil jedes unixoiden Systems
+	\end{itemize}
+\end{frame}
+
+\subsection{Debian}
+\begin{frame}[allowframebreaks, allowdisplaybreaks]{Debian}
+	\lstset{basicstyle=\tiny}
+	\lstinputlisting{mpd/debian}
+\end{frame}
+
+\subsection{Arch Linux}
+\begin{frame}[allowframebreaks, allowdisplaybreaks]{Arch Linux}
+	\lstset{basicstyle=\tiny}
+	\lstinputlisting{mpd/arch}
+\end{frame}
+
+\subsection{daemontools}
+\begin{frame}{daemontools}
+	\lstinputlisting{mpd/daemontools}
+\end{frame}
+
+% upstart ist noch nicht so ausgereift.
+% Dafür hat Simplicity in diesem Bereich keine Nachteile.
+\subsection{upstart}
+\begin{frame}{upstart}
+	\lstinputlisting{mpd/upstart}
+\end{frame}
+
+\subsection{Fazit}
+\begin{frame}{Fazit}
+	\begin{itemize}
+		\item Gewaltige Unterschiede
+		\pause \item Simplicity hat in diesem Bereich keine Nachteile
+	\end{itemize}
+\end{frame}
+
+\section{Linking}
+\begin{frame}{Was ist Linking?}
+	\begin{itemize}
+		\item Einbinden von Modulen in (C-)Programme
+		\pause \item Statisches vs. Dynamisches Linken
+	\end{itemize}
+\end{frame}
+
+\subsection{Statisches Linken}
+\begin{frame}{Statisches Linken}
+	\begin{itemize}
+		\item Kein Linken beim Programmstart
+		\pause \item Keine Probleme mit ABI-Changes
+		\pause \item Weniger Abhängigkeiten auf Libraries
+	\end{itemize}
+\end{frame}
+
+\subsection{Dynamisches Linken}
+\begin{frame}{Dynamisches Linken}
+	\begin{itemize}
+		\item Ein zentraler Patch fixt alle Binaries
+		\pause \item Geringerer RAM-Verbrauch und Plattenplatzbedarf
+		\pause \item Standard, daher wenig fummelig beim Bauen
+	\end{itemize}
+\end{frame}
+
+\subsection{Fazit}
+\begin{frame}{Fazit}
+	\begin{itemize}
+		\item Situationsabhängig, aber dynamisches Linken ist de-facto
+			Standard
+	\end{itemize}
+\end{frame}
+
+\section{zsh / mksh}
+\begin{frame}{Zsh vs. mksh}
+	\begin{itemize}
+		\item zsh: Z Shell, extrem konfigurierbar und featurereich
+		\item mksh / pdksh: Korn Shell-Varianten, können einiges, aber weniger
+	\end{itemize}
+\end{frame}
+
+\subsection{Nachteile der zsh}
+\begin{frame}{Nachteile der zsh}
+	\begin{itemize}
+		\item Sehr groß (536KiB Binary, mksh/pdksh: 224/196 KiB)
+		\pause \item Hoher RAM-Verbrauch (5-10M pro Instanz)
+		\pause \item Sehr komplex % (v.a. Completion, kann hängen)
+	\end{itemize}
+	\pause
+	\begin{quote}
+		shell programming is like LSD, you often see advantages that are not
+		there.
+	\end{quote}
+	\begin{flushright}
+		-- Zaba
+	\end{flushright}
+\end{frame}
+
+\subsection{Vorteile der mksh/pdksh}
+\begin{frame}{Vorteile der mksh/pdksh}
+	\begin{itemize}
+		\item Niedriger RAM-Verbrauch (500-800K)
+		\pause \item Schnelle Startup-Zeit % kein compinit
+		\pause \item Verhältnismäßig simpel
+	\end{itemize}
+\end{frame}
+
+\subsection{Bequemlichkeit}
+\begin{frame}{Aber: Bequemlichkeit}
+	\begin{itemize}
+		\item zsh kann einfach mehr
+		\pause \item $\rightarrow$ Abwägen, was einem wichtiger ist
+	\end{itemize}
+\end{frame}
+
+\section{hal}
+\begin{frame}{HAL}
+	\begin{itemize}
+		\item ``Hardware Abstraction Layer''
+		\pause \item Input-Hotplug, wobei X einzelne Geräte sehen kann
+		\pause \item Hotplug selbst ging und geht auch ohne HAL
+		\pause \item Klassisch: Flexibilität für wenige $\rightarrow$ mehr
+			Komplexität für alle
+		\pause \item Obskure XML-Configs
+		\pause \item Inzwischen: libudev
+	\end{itemize}
+\end{frame}
+
+\section{udev / mdev}
+\begin{frame}{udev vs. mdev}
+	Device-Hotplugging (/dev)
+\end{frame}
+
+\subsection{udev}
+\begin{frame}{udev}
+	\begin{itemize}
+		\item Daemon (Sicherheitsprobleme)
+		\pause \item udevadm settle: Teilweise sehr langsam
+	\end{itemize}
+\end{frame}
+
+\subsection{mdev}
+\begin{frame}{mdev}
+	\begin{itemize}
+		\item Kein Daemon
+		\pause \item kein Netlink-Socket, klassische
+			Argumente / Environment
+		\pause \item Hat trotzdem fast alle udev-Features
+		\pause \item Schnell (~0.1s für alle Devicenodes)
+	\end{itemize}
+\end{frame}
+
+\section{Abschluss}
+
+\begin{frame}{Fazit}
+	\begin{quote}
+		Linux is becoming an idiot box; a nanny operating system. The
+		complexity and
+		the idiot box ideals are killing the power user, and the spare time
+		developer.
+	\end{quote}
+	\begin{flushright}
+		-- Tuomo Valkonen
+	\end{flushright}
+\end{frame}
+
+\begin{frame}{Links}
+	\begin{itemize}
+		\item suckless.org
+		\item harmful.cat-v.org
+	\end{itemize}
+\end{frame}
+
+\end{document}
