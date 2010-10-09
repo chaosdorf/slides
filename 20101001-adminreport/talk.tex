@@ -1,0 +1,203 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=0.75]{beamerposter}
+\usetheme{Warsaw}
+\title[Der Chaosdorf-Adminreport]
+	{Der Chaosdorf-Adminreport}
+\author{Daniel Friesel \and Maximilian Gaß}
+\institute{Chaosdorf}
+\date{1. Oktober 2010}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\lstset{numbers=left}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+
+\begin{frame}{Am Anfang war das FreeBSD}
+	\begin{itemize}
+		\item FreeBSD-System mit Jails auf chaosdorf.de
+		\pause \item Von ? bis Sommer 2009
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Anforderungen}
+	\begin{itemize}
+		\item Zentrale Nutzerverwaltung
+		\item Shellserver
+		\item Mailserver
+		\item Website
+		\item Internes Wiki + Interner Bugtracker
+	\end{itemize}
+\end{frame}
+
+\section{Systembeschreibung}
+
+\begin{frame}{The Next Generation}
+	\begin{itemize}
+		\item To Boldly Serve How Noone Has Served Before
+	\end{itemize}
+	\begin{itemize}
+		\pause \item vm.chaosdorf.de
+		\begin{itemize}
+			\item backend.chaosdorf.de
+			\item frontend.chaosdorf.de
+			\item shells.chaosdorf.de
+		\end{itemize}
+	\end{itemize}
+	\begin{itemize}
+		\pause \item Debian Stable
+	\end{itemize}
+\end{frame}
+
+
+\subsection{vm.chaosdorf.de}
+\begin{frame}{Hardware und Hosting}
+	\begin{itemize}
+		\item Hosting by OpenIT
+		\item 217.69.82.240/29 in eigenem VLAN
+		\pause \item Keinerlei Remote-Zugriff außer SSH
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{vm.chaosdorf.de}
+	\begin{itemize}
+		\item Drei VMs mit qemu-kvm + libvirt
+		\pause \item Zwei Festplatten, RAID 1 + LVM
+		\pause \item Verschlüsselte Volumes für die einzelnen VMs
+		\pause \item Paketfilter mit ferm, auch zwischen VMs etc.
+	\end{itemize}
+\end{frame}
+
+\subsection{backend.chaosdorf.de}
+\begin{frame}{backend.chaosdorf.de}
+	\begin{itemize}
+		\item LDAP
+		\item (Noch:) Webserver mit phpldapadmin
+		\pause \item approx (Debian-Paketcache)
+		\item reprepro für das Admin-Toolkit
+	\end{itemize}
+\end{frame}
+
+\subsection{frontend.chaosdorf.de}
+\begin{frame}{frontend.chaosdorf.de}
+	\begin{itemize}
+		\item Mail
+		\begin{itemize}
+			\item Postfix mit postgrey und SpamPD
+			\pause \item Mailinglisten (miniml)
+			\pause \item Roundcube mit MySQL
+			\pause \item Dovecot
+			\pause \item Alle mit LDAP-Anbindung
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{frontend.chaosdorf.de}
+	\begin{itemize}
+		\item Webserver: Apache2
+		\begin{itemize}
+			\pause \item ikiwiki: Website und Wiki
+			\pause \item Ticketsystem: Roundup mit SQLite
+		\end{itemize}
+		\pause \item Userzugriff: SSH für git + SFTP für Userwebsites
+		\pause \item Userquotas
+	\end{itemize}
+\end{frame}
+
+\subsection{shells.chaosdorf.de}
+\begin{frame}{shells.chaosdorf.de}
+	\begin{itemize}
+		\item Shell-Zugriff. Sonst Nichts.
+		\pause \item Userlimits und Quotas
+	\end{itemize}
+\end{frame}
+
+\section{Clubraum-Infrastruktur}
+\subsection{Router}
+\begin{frame}{Clubraum-Infrastruktur}
+	\begin{itemize}
+		\item Raumserver: figurehead
+		\pause \item Routing mit dn42-Anschluss
+		\pause \item MPD
+		\pause \item FTP
+		\pause \item In Zukunft: WLAN-AP
+		\pause \item Keine Useraccounts, daher keine LDAP-Anbindung
+	\end{itemize}
+\end{frame}
+
+\subsection{Terminal}
+\begin{frame}{Clubraum-Terminal}
+	\begin{itemize}
+		\item In Planung
+		\pause \item Mit LDAP-Anbindung
+		\pause \item Option, eigene Livesysteme vom USB-Stick zu booten
+		\pause \item Problem: Booten externer Sticks vs. LDAP-Passwort auf
+			Festplatte
+	\end{itemize}
+\end{frame}
+
+\section{Weitere Themen}
+
+\subsection{Metafoo}
+\begin{frame}{Dokumentation und Transparenz}
+	\begin{itemize}
+		\item Doku schreiben, während man das System aufsetzt. Nicht später
+		\pause \item Änderungen: im öffentlichen Log + in \#chaosdorf
+		\pause \item Idee: Auditing mit sudo und Logcheck
+		\pause \item User haben Lesezugriff auf's Monitoring
+		\pause \item Alle Änderungen werden angekündigt
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Versionskontrolle}
+	\begin{itemize}
+		\item etckeeper (Git für /etc)
+		\pause \item Ebenfalls: Git für /usr/local
+	\end{itemize}
+\end{frame}
+
+\subsection{Monitoring}
+\begin{frame}{Monitoring}
+	\begin{itemize}
+		\item Will man haben
+		\pause \item Auf vom System komplett unabhängigen Host
+		\pause \item Zusätzliche Checks schaden nie
+		\pause \item Für SSH-CHecks: Separater key mit forcecommand
+		\pause \item Goodie: Ankündigungen im IRC per Bot
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Besondere Checks}
+	\begin{itemize}
+		\item Git-Status (/etc + /usr/local)
+		\pause \item Kein offener Mailrelay
+		\pause \item Kein SSH-Passwortlogin
+		\pause \item RBL (frontend nicht blacklisted)
+		\pause \item Laufende Kernelversion
+		\pause \item SSL-Zertifikate
+	\end{itemize}
+\end{frame}
+
+\subsection{Automatisierung}
+\begin{frame}{Automatisierung}
+	\begin{itemize}
+		\item Puppet (Rubyrant von mxey)
+		\pause \item $\rightarrow$ Admin-Toolkit als .deb mit reprepro
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Siehe auch}
+	\begin{itemize}
+		\item https://intern.chaosdorf.de/admin/
+		\item http://github.com/chaosdorf/chaosdorf-admin-toolkit
+	\end{itemize}
+\end{frame}
+
+\end{document}
