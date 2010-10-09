@@ -1,0 +1,41 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[ngerman]{babel}
+\selectlanguage{ngerman}
+
+% 16:9 slides
+\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=0.75]{beamerposter}
+
+% keine navigationsleiste
+\setbeamertemplate{navigation symbols}{}
+
+% eigene part-seite, mit untertitel und optionalem anderen partnamen
+\newcommand{\ppartpage}[2][\insertpart]{\begin{frame}\begin{centering}
+	{\usebeamerfont{part name}\usebeamercolor[fg]{part name}\partname~\insertromanpartnumber}
+	\vskip1em\par
+	\begin{beamercolorbox}[sep=8pt,center]{part title}
+		\usebeamerfont{part title}{#1}\par
+		\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}{#2}\par
+	\end{beamercolorbox}
+\end{centering}\end{frame}}
+
+% meta
+\title[DPaper]{DPaper -- Papier als digitales Speichermedium}
+\subtitle{Blah blah blah blah}
+\author{Sebastian Muszytowski -- Lars Stoltenow}
+\institute{Chaosdorf}
+\date{30. Juli 2010}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\input{muzy/talk.tex}
+\input{penma/talk.tex}
+
+\end{document}
