@@ -1,0 +1,171 @@
+\RequirePackage[herbstlich]{TUcolor}
+\documentclass[compress]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{eurosym}
+\usepackage{bibgerm}
+\usepackage{wasysym}
+\usepackage[style=alphabetic]{biblatex}
+\usepackage[orientation=landscape,size=custom,width=16,height=12,scale=0.55]{beamerposter}
+\title[MicroMoody]
+	{MicroMoody-Update\\\small Status und Erkenntnisse}
+\author{derf}
+\institute{Chaosdorf}
+\date{\today}
+
+\usetheme{Warsaw}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{navigation symbols}{\insertframenumber{} / \inserttotalframenumber\hspace*{1ex}}
+%\setbeamercolor{section in head/foot}{fg=black,bg=TUDogreen}
+%\setbeamercolor{subsection in head/foot}{fg=black,bg=TUDogreen}
+%\setbeamercolor{itemize item}{bg=red}
+%\setbeamercolor{bulletpoint}{bg=red}
+%
+\setbeamercolor{palette primary}{fg=white,bg=TUDogreen} % changed this
+\setbeamercolor{local structure}{fg=TUDogreen}
+%\setbeamercolor{palette secondary}{fg=yellow,bg=red} % changed this
+%\setbeamercolor{palette tertiary}{fg=red,bg=yellow} % changed this
+
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\footnoterule}{}
+
+\lstset{numbers=left}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{MicroMoody}
+\begin{frame}{Wat?}
+\begin{columns}
+\column{.5\textwidth}
+\includegraphics[width=\textwidth]{micromoody_front.jpg}
+\column{.5\textwidth}
+\begin{itemize}
+\item AVR (ATTiny85) + RGB-LED\\
+(furchtbar hell)
+\item kein USB, dafür I$^2$C\\
+$\to$ Bus-System
+\item Wenig Bauteile\\
+(Materialkosten $< 5$ \euro)
+\item Selbstverständlich:\\
+Ein Produkt des RaumZeitLabor
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Dat}
+\begin{columns}
+\column{.5\textwidth}
+\includegraphics[width=\textwidth]{micromoody_back.jpg}
+\column{.5\textwidth}
+\includegraphics[width=\textwidth]{circuit.png}
+\end{columns}
+\end{frame}
+
+\subsection{Status}
+\begin{frame}{Status}
+$\CheckedBox$ Fading (ähnlich dorfmap-RGB-Streifen)\\
+$\CheckedBox$ I$^2$C-Fernsteuerung\\
+$\CheckedBox$ I$^2$C-Bus (mehrere Moodies)\\
+$\Box$ USB $\to$ I$^2$C-Bausatz
+\end{frame}
+
+\section{Erkenntnisse}
+\begin{frame}{Today I learned...}
+\begin{itemize}
+\item Lesen hilft...
+\item Ausreichend Pins sind hilfreich
+\item "`Gute Ideen"' sind gefährlich
+\end{itemize}
+\end{frame}
+
+
+\subsection{I$^2$C}
+\begin{frame}{I$^2$C | Inter-Integrated Circuits}
+\begin{itemize}
+\item I$^2$C: Data und Clock, digital, bidirektional
+\item Bus: Default High (pull-ups), für 0 "`auf Ground ziehen"'\\
+{\small (vermeidet Kurzschlüsse)}
+\item S $\to$ Address, R/$\overline{\text{W}}$ $\to$ ACK/NAK
+$\to$ (Byte $\to$ ACK/NAK$)^*$\ $\to$ P
+\end{itemize}
+\uncover{Habe MicroMoody. Möchte testen und fernsteuern.}
+\begin{itemize}
+\item Arduino? Lolnope
+\item $\to$ VUSB PowerSwitch: Pins schalten und auslesen\\
+{\small (siehe Verstärkersteuerung)}
+\item Software-Pull-Ups sind \textbf{kein} Ersatz für echte
+Widerstände
+\item Nach Lesen der Spec: Funktioniert jetzt sogar
+\end{itemize}
+\end{frame}
+
+\subsection{Pins}
+\begin{frame}{ATTiny85}
+\begin{columns}
+\column{.5\textwidth}
+\begin{itemize}
+\item 8 Pins, $6\times$ IO
+\item 3 Pins für LED
+\item $+ 4$ Pins für ISP (davon 2 I$^2$C)
+\item $= 7$ von 6 Pins benötigt
+\item $\Rightarrow$ Doppelbelegung
+\end{itemize}
+\column{.5\textwidth}
+\includegraphics[width=\textwidth]{circuit-err.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Doppelbelegung}
+\begin{itemize}
+\item D.h.: \textbf{PB1} (Steuerpin für Grün) mit 6pin-Header verbunden
+\item Nicht für I$^2$C verwendet, aber im Kabel durchkontaktiert
+\item $\to$ Kurzschlüsse, komischer b0rk
+\end{itemize}
+\uncover{Was tun?}
+\begin{itemize}
+\item Designproblem | Nicht in Software lösbar
+\item Workaround: Pin 1 im Flachbandkabel durchschneiden
+\item ... Kabel damit nicht mehr zum Flashen geeignet
+\end{itemize}
+\end{frame}
+
+\subsection{Gute Ideen}
+\begin{frame}{Die Sache mit dem EEPROM}
+\ 
+{\small (EEPROM: "`Electronically Erasable Programmable Read Only Memory"'\\
+| D.h.: SSD/SD-Karte in ganz langsam)}
+\begin{itemize}
+\item Idee: Aktuelles Fade-Programm speichern
+\item ... damit es auch ohne Steuerung blinkt wie gewünscht
+\item Eigentlich eine gute Idee?
+\end{itemize}
+\uncover{"`Warum dauert das Ansteuern so lange?"'}
+\begin{itemize}
+\item 7 Statusbytes, EEPROM schreiben: $\approx 2$ms je Byte $\to$ 11ms je Befehl
+\item Auch: Remote Control-Strobo schlecht für Lebensdauer
+\item Jetzt: Modus Speichern über Extrabefehl
+\end{itemize}
+\end{frame}
+
+\section{tldr}
+\begin{frame}{tldr}
+\begin{itemize}
+\item MicroMoody inzwischen stabil nutzbar
+\item Lesen hilft
+\item Einen Schritt zurückgehen und nochmal denken auch
+\item (und mit anderen Menschen Debuggen sowieso)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Werbung}
+Wir haben noch MicroMoody- und Hacklace-Bausätze\\
+\ \\
+wiki.chaosdorf.de/MicroMoody
+\end{frame}
+
+\end{document}
